@@ -1,4 +1,5 @@
 import "./featuredProperties.css"
+import useFetch from "../../hooks/useFetch";
 
 export default function FeaturedProperties() {
     const images = [
@@ -8,21 +9,26 @@ export default function FeaturedProperties() {
         "https://cf.bstatic.com/static/img/theme-index/carousel_320x240/card-image-villas_300/dd0d7f8202676306a661aa4f0cf1ffab31286211.jpg",
         "https://cf.bstatic.com/static/img/theme-index/carousel_320x240/card-image-chalet_300/8ee014fcc493cb3334e25893a1dee8c6d36ed0ba.jpg",
     ];
+    const { data, loading, error } = useFetch("/hotels?featured=true&limit=4")
+    console.log(data)
     return (
         <div className="fp">
-            {images.map((item, i) => (
-                <div className="fpItem">
-                    <img src={item} alt="" className="fpImg" key={i} />
-                    <span className="fpName">property name</span>
-                    <span className="fpCity">city name</span>
-                    <span className="fpPrice">Staring from 200$</span>
-                    <div className="fpRating">
-                        <button>rating</button>
-                        <span>Excellent</span>
-                    </div>
+            {loading ? ("Loading") : (<>
+                {data.map((item, i) => (
+                    <div className="fpItem" key={item._id}>
+                        <img src={images[i]} alt="" className="fpImg" />
+                        <span className="fpName">{item.name}</span>
+                        <span className="fpCity">{item.city}</span>
+                        <span className="fpPrice">starting from $ {item.cheapestPrice}</span>
+                        {item.rating && <div className="fpRating">
+                            <button>{item.rating}</button>
+                            <span>Excellent</span>
+                        </div>}
 
-                </div>
-            ))}
+                    </div>
+                ))}
+            </>)}
+
 
         </div>
     )
