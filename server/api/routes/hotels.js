@@ -14,7 +14,7 @@ const router = express.Router();
 router.post('/', createHotel);
 //CREATE
 //UPDATE
-router.options('/:id', updateHotel);
+router.put('/:id', updateHotel);
 //GET
 router.get('/find/:id', getHotel);
 //GET ALL

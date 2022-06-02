@@ -1,7 +1,7 @@
 import "./searchItem.css"
 import { Link } from "react-router-dom";
 
-const SearchItem = () => {
+const SearchItem = ({ item, i }) => {
     const images = [
         "https://cf.bstatic.com/xdata/images/xphoto/square300/57584488.webp?k=bf724e4e9b9b75480bbe7fc675460a089ba6414fe4693b83ea3fdd8e938832a6&o=",
         "https://cf.bstatic.com/static/img/theme-index/carousel_320x240/card-image-apartments_300/9f60235dc09a3ac3f0a93adbc901c61ecd1ce72e.jpg",
@@ -11,11 +11,11 @@ const SearchItem = () => {
     ];
     return (
         <div className="searchItem">
-            <img src="https://cf.bstatic.com/xdata/images/xphoto/square300/57584488.webp?k=bf724e4e9b9b75480bbe7fc675460a089ba6414fe4693b83ea3fdd8e938832a6&o=" alt="" className="siImg" />
+            <img src={images[i]} alt="" className="siImg" />
             <div className="siDesc">
                 <h1 className="siTitle">
-                    Tower Street Apartments</h1>
-                <span className="siDistance">500m from center</span>
+                    {item.name}</h1>
+                <span className="siDistance">${item.distance}</span>
                 <span className="siTaxiOp">free airport taxi</span>
                 <span className="siSubtitle">
                     Studio Aprtment with Air conditioning</span>
@@ -31,9 +31,9 @@ const SearchItem = () => {
                     <button>8.9</button>
                 </div>
                 <div className="siDetailTexts">
-                    <span className="siPrice">500</span>
+                    <span className="siPrice">{item.cheapestPrice}</span>
                     <span className="siTaxOp">Includes taxes and fees</span>
-                    <Link to={`/hotels/`}>
+                    <Link to={`/hotels/${item._id}`}>
                         <button className="siCheckButton">See availability</button>
                     </Link>
                 </div>

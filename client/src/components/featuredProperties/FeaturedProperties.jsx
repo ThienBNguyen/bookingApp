@@ -10,7 +10,6 @@ export default function FeaturedProperties() {
         "https://cf.bstatic.com/static/img/theme-index/carousel_320x240/card-image-chalet_300/8ee014fcc493cb3334e25893a1dee8c6d36ed0ba.jpg",
     ];
     const { data, loading, error } = useFetch("/hotels?featured=true&limit=4")
-    console.log(data)
     return (
         <div className="fp">
             {loading ? ("Loading") : (<>
