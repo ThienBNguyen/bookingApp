@@ -5,9 +5,12 @@ import { faLocationDot, faCircleXmark, faCircleArrowLeft, faCircleArrowRight } f
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import MailList from '../../components/mailList/MailList';
 import Footer from '../../components/footer/Footer';
-import { useState } from 'react';
-import { useLocation } from 'react-router';
+import { useState, useContext } from 'react';
+import { useLocation, useNavigate } from 'react-router';
 import useFetch from '../../hooks/useFetch';
+import { SearchContext } from '../../context/SearchContext';
+import { AuthContext } from '../../context/AuthContext';
+import Reserve from '../../components/reserve/Reserve';
 
 const Hotel = () => {
     const [slideNumber, setSlideNumber] = useState(0)
@@ -15,6 +18,7 @@ const Hotel = () => {
     const [openModal, setOpenModal] = useState(false)
     const location = useLocation();
     const id = location.pathname.split("/"[2])
+    const navigate = useNavigate()
     const images = [
         "https://cf.bstatic.com/xdata/images/xphoto/square300/57584488.webp?k=bf724e4e9b9b75480bbe7fc675460a089ba6414fe4693b83ea3fdd8e938832a6&o=",
         "https://cf.bstatic.com/static/img/theme-index/carousel_320x240/card-image-apartments_300/9f60235dc09a3ac3f0a93adbc901c61ecd1ce72e.jpg",
@@ -22,12 +26,21 @@ const Hotel = () => {
         "https://cf.bstatic.com/static/img/theme-index/carousel_320x240/card-image-villas_300/dd0d7f8202676306a661aa4f0cf1ffab31286211.jpg",
         "https://cf.bstatic.com/static/img/theme-index/carousel_320x240/card-image-chalet_300/8ee014fcc493cb3334e25893a1dee8c6d36ed0ba.jpg",
     ];
-    const { data, loading, error } = useFetch(`find/${id}`)
-    console.log(data)
+    const { data, loading, error } = useFetch(`${id}`)
     const handleOpen = (i) => {
         setSlideNumber(i);
         setOpen(true);
     }
+    const { dates, options } = useContext(SearchContext)
+    const { user } = useContext(AuthContext)
+    const MILLISECONDS_PER_DAY = 1000 * 60 * 60 * 24;
+    function dayDifference(date1, date2) {
+        const timeDiff = Math.abs(date2.getTime() - date1.getTime());
+        const diffDays = Math.ceil(timeDiff / MILLISECONDS_PER_DAY);
+        return diffDays;
+    }
+    const days = dayDifference(dates[0].endDate, dates[0].startDate)
+
     const handleMove = (direction) => {
         let newSlideNumber;
         if (direction == "l") {
@@ -36,6 +49,13 @@ const Hotel = () => {
             newSlideNumber = slideNumber === 5 ? 0 : slideNumber + 1;
         }
         setSlideNumber(newSlideNumber)
+    }
+    const handleClick = () => {
+        if (user) {
+            setOpenModal(true)
+        } else {
+            navigate("/")
+        }
     }
     return (
         <div>
@@ -97,17 +117,18 @@ const Hotel = () => {
                             <h1>Perfect for a 9-night stay!</h1>
                             <span>located in the real heart of krakow, this property has an excellent location score of 9.8</span>
                             <h2>
-                                <b>${data.cheapestPrice}</b>
+                                <b>${days * data.cheapestPrice * options.room}</b> ({days} nights)
                             </h2>
-                            <button>reserve or book now</button>
+                            <button onClick={handleClick}>reserve or book now</button>
                         </div>
 
                     </div>
 
                 </div>
+                <MailList />
+                <Footer />
             </div>
-            <MailList />
-            <Footer />
+            {openModal && <Reserve setOpen={setOpenModal} hotelId={id} />}
         </div>
     );
 }
