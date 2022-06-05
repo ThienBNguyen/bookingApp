@@ -51,6 +51,8 @@ const Hotel = () => {
         setSlideNumber(newSlideNumber)
     }
     const handleClick = () => {
+        setOpenModal(true)
+
         if (user) {
             setOpenModal(true)
         } else {
