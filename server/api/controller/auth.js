@@ -1,9 +1,10 @@
 import { createError } from '../utils/errors.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import User from '../models/User.js';
 export const register = async (req, res, next) => {
 	try {
-		const salt = bcrypt.getSalt(10);
+		const salt = bcrypt.genSaltSync(10);
 		const hash = bcrypt.hashSync(req.body.password, salt);
 		const newUser = new User({
 			...req.body,
