@@ -20,10 +20,10 @@ const Login = () => {
 
   const handleClick = async (e) => {
     e.preventDefault();
+    console.log(credentials)
     dispatch({ type: "LOGIN_START" });
     try {
-      const res = await axios.post("/auth/login", credentials);
-
+      const res = await axios.post("http://localhost:8800/api/auth/login", credentials);
       if (res.data.isAdmin) {
         dispatch({ type: "LOGIN_SUCCESS", payload: res.data.details });
         navigate("/")
@@ -46,6 +46,7 @@ const Login = () => {
           id="username"
           onChange={handleChange}
           className="lInput"
+          placeholder="admin"
         />
         <input
           type="password"
@@ -53,6 +54,7 @@ const Login = () => {
           id="password"
           onChange={handleChange}
           className="lInput"
+          placeholder="admin"
         />
         <button disabled={loading} onClick={handleClick} className="lButton">
           Login

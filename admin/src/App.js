@@ -14,7 +14,7 @@ function App() {
 	const { darkMode } = useContext(DarkModeContext);
 	const ProtectedRoute = ({ children }) => {
 		const { user } = useContext(AuthContext);
-		console.log(user);
+
 		if (!user) {
 			return <Navigate to="/login" />;
 		}
@@ -29,22 +29,70 @@ function App() {
 						<Route
 							index
 							element={
-								// <ProtectedRoute>
-								// {' '}
-								<Home />
-								// </ProtectedRoute>
+								<ProtectedRoute>
+									{' '}
+									<Home />
+								</ProtectedRoute>
 							}
 						/>
 
 						<Route path="users">
-							<Route index element={<List />} />
-							<Route path=":userId" element={<Single />} />
-							<Route path="new" element={<New inputs={userInputs} title="Add New User" />} />
+							<Route
+								index
+								element={
+									<ProtectedRoute>
+										{' '}
+										<List />
+									</ProtectedRoute>
+								}
+							/>
+							<Route
+								path=":userId"
+								element={
+									<ProtectedRoute>
+										{' '}
+										<Single />
+									</ProtectedRoute>
+								}
+							/>
+							<Route
+								path="new"
+								element={
+									<ProtectedRoute>
+										{' '}
+										<New inputs={userInputs} title="Add New User" />
+									</ProtectedRoute>
+								}
+							/>
 						</Route>
 						<Route path="products">
-							<Route index element={<List />} />
-							<Route path=":productId" element={<Single />} />
-							<Route path="new" element={<New inputs={productInputs} title="Add New Product" />} />
+							<Route
+								index
+								element={
+									<ProtectedRoute>
+										{' '}
+										<List />
+									</ProtectedRoute>
+								}
+							/>
+							<Route
+								path=":productId"
+								element={
+									<ProtectedRoute>
+										{' '}
+										<Single />
+									</ProtectedRoute>
+								}
+							/>
+							<Route
+								path="new"
+								element={
+									<ProtectedRoute>
+										{' '}
+										<New inputs={productInputs} title="Add New Product" />
+									</ProtectedRoute>
+								}
+							/>
 						</Route>
 					</Route>
 				</Routes>

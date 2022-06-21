@@ -3,14 +3,14 @@ import { DataGrid } from "@mui/x-data-grid";
 import { userColumns, userRows } from "../../datatablesource";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-import useFetch from "../../hooks/useFetch"
+import useFetch from "../../hooks/useFetch.js";
 const Datatable = () => {
   const [list, setList] = useState();
+  const { data, loading, error } = useFetch("http://localhost:8800api/users")
+  console.log(data)
   useEffect(() => {
     setList(data);
   }, [data])
-  const { data, loading, error } = useFetch("/users")
-  console.log(data)
   const handleDelete = (id) => {
     setList((data.filter((item) => item.id !== id)))
   }
@@ -44,7 +44,7 @@ const Datatable = () => {
           Add New
         </Link>
       </div>
-      <DataGrid
+      {/* <DataGrid
         className="datagrid"
         rows={list}
         columns={userColumns.concat(actionColumn)}
@@ -52,7 +52,7 @@ const Datatable = () => {
         rowsPerPageOptions={[9]}
         checkboxSelection
         getRowId={row => row._id}
-      />
+      /> */}
     </div>
   );
 };
