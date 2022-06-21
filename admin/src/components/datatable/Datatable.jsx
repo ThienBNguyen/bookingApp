@@ -1,18 +1,30 @@
 import "./datatable.scss";
 import { DataGrid } from "@mui/x-data-grid";
-import { userColumns, userRows } from "../../datatablesource";
-import { Link } from "react-router-dom";
+// import { userColumns, userRows } from "../../datatablesource";
+import { Link, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import useFetch from "../../hooks/useFetch.js";
-const Datatable = () => {
+import axios from "axios";
+const Datatable = ({ columns }) => {
   const [list, setList] = useState();
-  const { data, loading, error } = useFetch("http://localhost:8800api/users")
-  console.log(data)
+  const [isLoading, setLoading] = useState(true);
+  const url = "http://localhost:8800/api"
+  const { data, } = useFetch(`${url}/users`)
+  const location = useLocation();
+  const path = location.pathname.split("/")[1];
   useEffect(() => {
     setList(data);
+    setLoading(false);
   }, [data])
-  const handleDelete = (id) => {
-    setList((data.filter((item) => item.id !== id)))
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`${url}/users/${id}`)
+      console.log(data)
+      setList((data.filter((item) => item._id !== id)))
+
+    } catch (error) {
+
+    }
   }
   const actionColumn = [
     {
@@ -36,23 +48,26 @@ const Datatable = () => {
       },
     },
   ];
+  if (isLoading) {
+    return <div>Loading...</div>
+  }
   return (
     <div className="datatable">
       <div className="datatableTitle">
-        Add New User
-        <Link to="/users/new" className="link">
+        {path}
+        <Link to={`/${path}/new`} className="link">
           Add New
         </Link>
       </div>
-      {/* <DataGrid
+      <DataGrid
         className="datagrid"
         rows={list}
-        columns={userColumns.concat(actionColumn)}
+        columns={columns.concat(actionColumn)}
         pageSize={9}
         rowsPerPageOptions={[9]}
         checkboxSelection
         getRowId={row => row._id}
-      /> */}
+      />
     </div>
   );
 };
